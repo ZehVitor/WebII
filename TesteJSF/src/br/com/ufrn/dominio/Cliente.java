@@ -1,12 +1,16 @@
 package br.com.ufrn.dominio;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -22,6 +26,14 @@ public class Cliente implements Serializable {
 	private int id;
 	
 	private String nome;
+	
+	@OneToMany(mappedBy="cliente")
+	private List<Pedido> pedidos;
+	
+	@OneToOne(optional=true)
+    @JoinColumn(
+        name="id_Conta", unique=true, nullable=true, updatable=true)
+	private Conta conta;
 
 	public String getNome() {
 		return nome;
@@ -29,6 +41,30 @@ public class Cliente implements Serializable {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	public List<Pedido> getPedidos() {
+		return pedidos;
+	}
+
+	public void setPedidos(List<Pedido> pedidos) {
+		this.pedidos = pedidos;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Conta getConta() {
+		return conta;
+	}
+
+	public void setConta(Conta conta) {
+		this.conta = conta;
 	}
 
 }

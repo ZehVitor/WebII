@@ -4,11 +4,16 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -19,14 +24,21 @@ public class Pedido implements Serializable {
 	
 	@Id
 	@SequenceGenerator(name="SEQ_PEDIDO", initialValue=1,
-	allocationSize=1, sequenceName="seq_PEDIDO")
+	allocationSize=1, sequenceName="seq_pedido")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_PEDIDO")
 	@Column(name="id_Pedido")
 	private int id;
-	
-	private List<ItemCardapio> itens;
 	private double valor;
+	
+	@OneToMany(mappedBy="pedido")
+	private List<ItemCardapio> itens;
+	
+	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.REFRESH)
+	@JoinColumn(name = "id_Cliente")
 	private Cliente cliente;
+	
+	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.REFRESH)
+	@JoinColumn(name = "id_Mesa")
 	private Mesa mesa;
 	
 	public Pedido(Mesa mesa) {
@@ -38,7 +50,6 @@ public class Pedido implements Serializable {
 	public Pedido() {
 		this.cliente = new Cliente();
 		this.cliente.setNome("Cliente não identificado");
-		//this.mesa = mesa;
 		this.itens = new ArrayList<ItemCardapio>();
 	}
 
